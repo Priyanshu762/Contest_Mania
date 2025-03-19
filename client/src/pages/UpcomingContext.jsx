@@ -63,7 +63,14 @@ const UpcomingContext = () => {
     ];
     setContests(fetchedContests);
   }, []);
-
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFilteredContests((prev) => [...prev]);
+    }, 1000);
+  
+    return () => clearInterval(interval);
+  }, []);
+  
   useEffect(() => {
     let filtered = contests;
 
@@ -160,17 +167,32 @@ const UpcomingContext = () => {
                   <th className="p-3 border-b">Contest Name</th>
                   <th className="p-3 border-b">Start Time</th>
                   <th className="p-3 border-b">End Time</th>
+                  <th className="p-3 border-b">Remaining Time</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredContests.map((contest) => (
-                  <tr key={contest.id} className="border-b hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                    <td className="p-3">{contest.name}</td>
-                    <td className="p-3">{new Date(contest.startTime).toLocaleString()}</td>
-                    <td className="p-3">{new Date(contest.endTime).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
+  {filteredContests.map((contest) => {
+    const contestStartTime = new Date(contest.startTime);
+    const now = new Date();
+    const timeDiff = contestStartTime - now;
+
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    return (
+      <tr key={contest.id} className="border-b hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        <td className="p-3">{contest.name}</td>
+        <td className="p-3">{contestStartTime.toLocaleString()}</td>
+        <td className="p-3">{new Date(contest.endTime).toLocaleString()}</td>
+        <td className="p-3 font-bold text-red-600">
+          {timeDiff > 0 ? `${hours}h ${minutes}m ${seconds}s` : "Started"}
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
             </table>
           </div>
         </main>

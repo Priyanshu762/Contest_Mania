@@ -3,11 +3,15 @@ import { userNavbarList } from "../data/global/userNavbar";
 import { Link, useLocation } from "react-router-dom";
 import { FaUserAlt, FaMoon, FaSun } from "react-icons/fa";
 import { ThemeContext } from "../context/ThemeContext"; // Import Context
+import LogoutButton from "./common/logout";
+import { useAuthContext } from "../context/AuthContext";
+import { BiLogIn } from "react-icons/bi";
 
 const Navbar = () => {
   const location = useLocation();
   const { darkMode, setDarkMode } = useContext(ThemeContext); // Use global dark mode state
-
+  
+  const { authUser } = useAuthContext();
   return (
     <nav className="flex px-10 justify-between h-[7vh] items-center bg-white text-black dark:bg-gray-900 dark:text-white shadow-md transition duration-300">
       {/* Brand */}
@@ -56,6 +60,18 @@ const Navbar = () => {
         <span className="text-xl cursor-pointer hover:text-blue-500 dark:hover:text-yellow-400">
           <FaUserAlt />
         </span>
+          {authUser
+            ?
+            <span>
+
+            <LogoutButton/></span>
+            :
+            <span> <Link to={"/auth/login"}>
+              
+              <BiLogIn className='w-6 h-6 dark:text-white cursor-pointer'  />
+              </Link>
+              </span>
+          }
       </div>
     </nav>
   );

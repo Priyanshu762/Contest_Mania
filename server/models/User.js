@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   googleId: { type: String },
   displayName: { type: String },
+  profilePic: {
+    type: String,
+    default: "",
+  },
 });
 
 userSchema.pre('save', async function (next) {

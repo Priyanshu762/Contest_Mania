@@ -18,9 +18,14 @@ import NotFound from "./pages/NotFound";
 import UpcomingContext from "./pages/UpcomingContext";
 import PastContests from "./pages/PastContests"
 import ContactUs from "./pages/ContactUs";
+import { useAuthContext } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
+  const { authUser } = useAuthContext();
+  console.log("Auth User: ",authUser);
   return (
+
     <>
       <div className="h-screen">
         <Navbar></Navbar>
@@ -31,7 +36,7 @@ const App = () => {
           <Route
             path="/auth"
             element={
-              <CheckAuth isAuthenticated={true}>
+              <CheckAuth isAuthenticated={authUser}>
                 <AuthLayout></AuthLayout>
               </CheckAuth>
             }
@@ -46,6 +51,7 @@ const App = () => {
           <Route path="/contact-us" element={<ContactUs/>} />
           <Route path="*" element={<NotFound></NotFound>}/>
         </Routes>
+        <Toaster></Toaster>
       </div>
     </>
   );
